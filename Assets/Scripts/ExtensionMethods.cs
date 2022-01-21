@@ -8,10 +8,15 @@ public static class ExtensionMethods
     private static float volumeIn;
     private static float volumeOut;
 
-    private static float inputX;
-    private static float inputZ;
+    private static float moveX;
+    private static float moveZ;
     private static Vector3 previous;
     private static Vector3 towards;
+
+    private static float lookHor;
+    private static float lookVer;
+    private static Vector3 bodyAngle;
+    private static Vector3 lookAngle;
     #endregion
 
 
@@ -62,10 +67,10 @@ public static class ExtensionMethods
     /// <param name="speed">Float number that defines how fast should Character move.</param>
     public static void MovementMethod(this Rigidbody body, float speed)
     {
-        inputX = Input.GetAxisRaw("Horizontal");
-        inputZ = Input.GetAxisRaw("Vertical");
-        towards.x = inputX;
-        towards.z = inputZ;
+        moveX = Input.GetAxisRaw("Horizontal");
+        moveZ = Input.GetAxisRaw("Vertical");
+        towards.x = moveX;
+        towards.z = moveZ;
         towards.Normalize();
 
         if (Input.GetKey(KeyCode.LeftShift))
@@ -85,5 +90,39 @@ public static class ExtensionMethods
         Debug.DrawRay(body.position, Vector3.up * body.velocity.y, Color.magenta);
     }
 
+    /// <summary>
+    /// It handles Camera for 3rd Person View. This requires Transform of Camera's pivot.
+    /// </summary>
+    /// <param name="body">Rigidbody component which is attached to Character.</param>
+    /// <param name="pivot">Transform of Camera's pivot.</param>
+    /// <param name="speed">Float number that defines how fast should Camera move.</param>
+    public static void ThirdPersonControl(this Rigidbody body, Transform pivot, float speed)
+    {
+        lookHor = Input.GetAxis("Mouse X");
+        lookVer = -Input.GetAxis("Mouse Y");
+        lookAngle.x = lookVer;
 
+        if (Input.GetMouseButton(1))
+        {
+            lookAngle.y = lookHor;
+            bodyAngle.y = 0;
+        }
+        else
+        {
+            if (Input.GetMouseButtonUp(1))
+                pivot.eulerAngles = new Vector3(0, body.transform.eulerAngles.y, 0);
+            lookAngle.y = 0;
+            bodyAngle.y = lookHor;
+        }
+
+        pivot.eulerAngles += lookAngle;
+        body.transform.eulerAngles += bodyAngle;
+
+        Debug.DrawRay(pivot.position, pivot.forward * 1f, Color.cyan);
+    }
+
+    public static void FirstPersonControl(this Camera cam, Transform pivot, float speed)
+    {
+
+    }
 }

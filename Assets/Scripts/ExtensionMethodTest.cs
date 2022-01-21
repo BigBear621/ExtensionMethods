@@ -13,6 +13,11 @@ public class ExtensionMethodTest : MonoBehaviour
     private Vector3 towards;
     private float speed = 10;
 
+    [SerializeField]
+    private Transform pivot;
+    [SerializeField]
+    private Camera cam;
+
     private void Start()
     {
         source0 = gameObject.AddComponent<AudioSource>();
@@ -32,5 +37,6 @@ public class ExtensionMethodTest : MonoBehaviour
     private void Update()
     {
         body.MovementMethod(speed);
+        body.ThirdPersonControl(pivot, speed);
     }
 }
