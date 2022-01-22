@@ -125,4 +125,16 @@ public static class ExtensionMethods
     {
 
     }
+
+    public static Queue<GameObject> QueueDeepCopy(this Queue<GameObject> origin)
+    {
+        Queue<GameObject> copy = new Queue<GameObject>();
+        for (int i = 0; i < origin.Count; i++)
+        {
+            GameObject content = origin.Dequeue();
+            origin.Enqueue(content);
+            copy.Enqueue(content);
+        }
+        return copy;
+    }
 }
