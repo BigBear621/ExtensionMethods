@@ -137,4 +137,26 @@ public static class ExtensionMethods
         }
         return copy;
     }
+
+    public static void Vector3Int(this ref Vector3 vector3)
+    {
+        if (vector3.x < 0)
+            vector3.x = -1;
+        else if (vector3.x > 1)
+            vector3.x = 1;
+        else vector3.x = 0;
+
+        if (vector3.y < 0)
+            vector3.y = -1;
+        else if (vector3.y > 1)
+            vector3.y = 1;
+        else vector3.y = 0;
+
+        if (vector3.z < 0)
+            vector3.z = -1;
+        else if (vector3.z > 1)
+            vector3.z = 1;
+        else vector3.z = 0;
+    }
+
 }
