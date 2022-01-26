@@ -1,6 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
+
+namespace CustomMethods
+{
+    enum CAMERA_VIEW_TYPE
+    {
+        FIRST_PERSON,
+        THIRD_PERSON_SHOULDER,
+        THIRD_PERSON_BACK
+    }
+
+    [Serializable]
+    public class Class0
+    {
+
+    }
+
+}
 
 public static class ExtensionMethods
 {
@@ -19,7 +39,6 @@ public static class ExtensionMethods
     private static Vector3 lookAngle;
     #endregion
 
-
     /// <summary>
     /// It changes music player's volume smoothly. Select AudioClip you want to play and start this Coroutine. It requires two AudioSources.
     /// </summary>
@@ -30,13 +49,13 @@ public static class ExtensionMethods
     {
         volumeIn = fadeIn.volume;
         volumeOut = fadeOut.volume;
-        
+
         fadeIn.clip = clip;
         fadeIn.Play();
         while (volumeOut > 0)
         {
-            volumeIn += Time.deltaTime/2;
-            volumeOut -= Time.deltaTime/2;
+            volumeIn += Time.deltaTime / 2;
+            volumeOut -= Time.deltaTime / 2;
             if (volumeIn >= 1)
                 volumeIn = 1;
             if (volumeOut <= 0)
@@ -48,7 +67,7 @@ public static class ExtensionMethods
         }
         fadeOut.Stop();
     }
-    
+
     /// <summary>
     /// Same Method as Rigidbody's MovePosition, but it hides long codes for better readability.
     /// </summary>
@@ -115,27 +134,27 @@ public static class ExtensionMethods
             bodyAngle.y = lookHor;
         }
 
-        pivot.eulerAngles += lookAngle;
-        body.transform.eulerAngles += bodyAngle;
+        pivot.eulerAngles += lookAngle * Time.deltaTime * speed;
+        body.transform.eulerAngles += bodyAngle * Time.deltaTime * speed;
 
+        Debug.DrawRay(body.position, body.transform.forward * 1f, Color.black);
         Debug.DrawRay(pivot.position, pivot.forward * 1f, Color.cyan);
     }
 
-    public static void FirstPersonControl(this Camera cam, Transform pivot, float speed)
+    public static void FirstPersonControl(this Rigidbody body, Transform pivot, float speed)
     {
+        lookHor = Input.GetAxis("Mouse X");
+        lookVer = Input.GetAxis("Mouse Y");
+        lookAngle.x = lookVer;
 
-    }
+        bodyAngle.y = lookHor;
 
-    public static Queue<GameObject> QueueDeepCopy(this Queue<GameObject> origin)
-    {
-        Queue<GameObject> copy = new Queue<GameObject>();
-        for (int i = 0; i < origin.Count; i++)
-        {
-            GameObject content = origin.Dequeue();
-            origin.Enqueue(content);
-            copy.Enqueue(content);
-        }
-        return copy;
+        pivot.eulerAngles += lookAngle * Time.deltaTime * speed;
+        body.transform.eulerAngles += bodyAngle * Time.deltaTime * speed;
+
+        Debug.DrawRay(body.position, body.transform.forward * 1f, Color.black);
+        Debug.DrawRay(pivot.position, pivot.forward * 1f, Color.cyan);
+
     }
 
     public static void Vector3Int(this ref Vector3 vector3)

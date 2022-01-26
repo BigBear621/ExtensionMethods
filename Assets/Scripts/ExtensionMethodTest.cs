@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CustomMethods;
+
 
 public class ExtensionMethodTest : MonoBehaviour
 {
@@ -11,14 +13,16 @@ public class ExtensionMethodTest : MonoBehaviour
 
     private Rigidbody body;
     private Vector3 towards;
-    private float speed = 10;
+    private float moveSpeed = 10;
+
+    private float lookSpeed = 100f;
 
     [SerializeField]
-    private Transform pivot;
+    private Transform thirdPersonPivot;
     [SerializeField]
-    private Camera cam;
+    private Transform firstPersonPivot;
 
-    private void Start()
+    private void Awake()
     {
         source0 = gameObject.AddComponent<AudioSource>();
         source1 = gameObject.AddComponent<AudioSource>();
@@ -30,13 +34,13 @@ public class ExtensionMethodTest : MonoBehaviour
         clip[0].CrossFade(source0, source1);
         ExtensionMethods.CrossFade(clip[0], source0, source1);
 
-        body.MoveTowards(towards, speed);
-        ExtensionMethods.MoveTowards(body, towards, speed);
+        body.MoveTowards(towards, moveSpeed);
+        ExtensionMethods.MoveTowards(body, towards, lookSpeed);
     }
 
     private void Update()
     {
-        body.MovementMethod(speed);
-        body.ThirdPersonControl(pivot, speed);
+        body.MovementMethod(moveSpeed);
+        body.ThirdPersonControl(thirdPersonPivot, lookSpeed);
     }
 }
